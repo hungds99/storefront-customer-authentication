@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CLIENT_ID, SHOP_ID } from './common/constant';
 
 const Callback = () => {
   const [searchParams] = useSearchParams();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [customer, setCustomer] = useState<any>({});
 
   const handleExchangeToken = async () => {
     const customerApiClientId = '30243aa5-17c1-465a-8493-944bcc4e88aa';
@@ -40,12 +42,14 @@ const Callback = () => {
             Authorization: access_token,
           },
           body: JSON.stringify({
-            query: 'query { customer { id }}',
+            query: `query { customer { id displayName imageUrl emailAddress { emailAddress } }}`,
             variables: {},
           }),
         },
       );
-      console.log('Customer Response: ', await customerResponse.json());
+      const customerDataRes = await customerResponse.json();
+      console.log('Customer Response: ', customerDataRes);
+      customerDataRes?.data?.customer && setCustomer(customerDataRes?.data?.customer);
     }
   };
 
@@ -91,7 +95,20 @@ const Callback = () => {
     handleGetToken();
   }, [searchParams, handleGetToken]);
 
-  return <div>Callback</div>;
+  return (
+    <div>
+      {customer ? (
+        <>
+          <h3>Customer Information</h3>
+          <img src={customer?.imageUrl} alt='avatar' />
+          <h4>Display name: {customer?.displayName}</h4>
+          <h4>Email: {customer?.emailAddress?.emailAddress}</h4>
+        </>
+      ) : (
+        <h1>Loading...</h1>
+      )}
+    </div>
+  );
 };
 
 export default Callback;
