@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Callback from './Account.tsx';
+import Callback from './Callback.tsx';
 import App from './App.tsx';
 import './index.css';
 

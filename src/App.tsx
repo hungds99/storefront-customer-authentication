@@ -1,10 +1,11 @@
 import './App.css';
+import { SHOP_ID } from './common/constant';
 import { generateCodeChallenge, generateCodeVerifier, generateNonce, generateState } from './utils';
 
 function App() {
   const handleAuthentication = async () => {
-    const clientId = 'shp_8d2cdc84-d967-405f-962c-739d2d838eb6';
-    const authorizationRequestUrl = new URL(`https://shopify.com/68099145966/auth/oauth/authorize`);
+    const clientId = import.meta.env.VITE_SHOPIFY_CLIENT_ID;
+    const authorizationRequestUrl = new URL(`https://shopify.com/${SHOP_ID}/auth/oauth/authorize`);
 
     authorizationRequestUrl.searchParams.append(
       'scope',
@@ -17,7 +18,7 @@ function App() {
     authorizationRequestUrl.searchParams.append('response_type', 'code');
     authorizationRequestUrl.searchParams.append(
       'redirect_uri',
-      `https://internal-sadly-stag.ngrok-free.app/callback`,
+      `${window.location.origin}/callback`,
     );
     authorizationRequestUrl.searchParams.append('state', state);
     authorizationRequestUrl.searchParams.append('nonce', nonce);
